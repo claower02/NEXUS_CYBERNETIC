@@ -37,12 +37,25 @@ export async function POST(req: Request) {
     const { content, code, language, repoName, repoDesc, repoStars, repoLang } = await req.json()
 
     // Находим пользователя в базе по email
-    const user = await prisma.user.findUnique({
+    let user = await prisma.user.findUnique({
       where: { email: session.user.email }
     })
 
+    // Если это гость и его нет в базе — создадим временную запись
+    if (!user && session.user.email === "guest@nexus.io") {
+      user = await prisma.user.create({
+        data: {
+          email: "guest@nexus.io",
+          name: "Guest Developer",
+          githubLogin: "guest_node"
+        }
+      })
+    }
+
     if (!user) {
-      return NextResponse.json({ error: "Пользователь не найден в БД" }, { status: 404 })
+      return NextResponse.json({ 
+        error: "Ваш аккаунт еще не синхронизирован с БД. Попробуйте перезайти через GitHub." 
+      }, { status: 404 })
     }
 
     const newPost = await prisma.post.create({
