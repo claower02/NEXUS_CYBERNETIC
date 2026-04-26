@@ -1,147 +1,290 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
 
-/* Advanced Cyber UI System */
+/* ═══════════════════════════════════════════
+   NEXUS_CYBERNETIC — Design System v2.0
+   ═══════════════════════════════════════════ */
+
 :root {
+  /* Neon Colors */
   --neon-green: #00ff88;
+  --neon-green-glow: rgba(0, 255, 136, 0.4);
   --neon-blue: #00d2ff;
+  --neon-blue-glow: rgba(0, 210, 255, 0.4);
   --neon-purple: #b538ff;
+  --neon-purple-glow: rgba(181, 56, 255, 0.4);
   --neon-red: #ff3860;
-  --dark-bg: #050505;
-  --card-bg: rgba(20, 20, 30, 0.4);
-  --border-glass: rgba(255, 255, 255, 0.08);
+
+  /* Backgrounds */
+  --bg-primary: #020205;
+  --bg-secondary: #08080f;
+  --bg-glass: rgba(15, 15, 25, 0.45);
+
+  /* Text */
+  --text-primary: #f0f0f0;
+  --text-secondary: #a0a0b0;
+  --text-muted: #505060;
+
+  /* Borders */
+  --border-glass: rgba(255, 255, 255, 0.06);
+
+  /* Transitions */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-medium: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Modern Cybernetic UI Reset */
-* {
+/* ─── Reset ─────────────────────────────── */
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* ─── Body ──────────────────────────────── */
 body {
-  background-color: #020205;
-  color: #ffffff;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   font-family: 'Outfit', sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
-  /* Deep atmosphere background */
-  background-image: 
-    radial-gradient(circle at 20% 20%, rgba(0, 210, 255, 0.05), transparent 40%),
-    radial-gradient(circle at 80% 80%, rgba(181, 56, 255, 0.05), transparent 40%);
+  background-image:
+    radial-gradient(circle at 15% 25%, rgba(0, 210, 255, 0.06), transparent 35%),
+    radial-gradient(circle at 85% 75%, rgba(181, 56, 255, 0.06), transparent 35%),
+    radial-gradient(circle at 50% 50%, rgba(0, 255, 136, 0.02), transparent 60%);
+}
+
+/* ─── Typography ────────────────────────── */
+h1, h2, h3, h4 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 .mono { font-family: 'Fira Code', monospace; }
+a { color: inherit; text-decoration: none; transition: color var(--transition-fast); }
+a:hover { color: var(--neon-blue); }
 
-/* Borderless Glass Panels with Soft Glow */
-.glass-panel, .hologram-card {
-  background: rgba(15, 15, 25, 0.4);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  border-radius: 20px;
+/* ─── Neon Text ─────────────────────────── */
+.text-neon-green  { color: var(--neon-green);  text-shadow: 0 0 12px var(--neon-green-glow); }
+.text-neon-blue   { color: var(--neon-blue);   text-shadow: 0 0 12px var(--neon-blue-glow); }
+.text-neon-purple { color: var(--neon-purple); text-shadow: 0 0 12px var(--neon-purple-glow); }
+.text-shadow { text-shadow: 0 0 20px currentColor; }
+
+/* ─── Glass Panel ───────────────────────── */
+.glass-panel {
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 18px;
   position: relative;
-  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-  box-shadow: 0 10px 40px -15px rgba(0,0,0,0.5);
+  overflow: hidden;
+  transition: all var(--transition-medium);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
-.glass-panel:hover, .hologram-card:hover {
-  transform: translateY(-4px);
-  background: rgba(20, 20, 30, 0.5);
-  box-shadow: 0 0 30px -5px rgba(0, 210, 255, 0.15);
-}
-
-/* Edge Accents (Replacement for white borders) */
-.glass-panel::before, .hologram-card::before {
+.glass-panel::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0, 210, 255, 0.4), transparent);
-  border-radius: 20px 20px 0 0;
+  background: linear-gradient(90deg, transparent, rgba(0, 210, 255, 0.3), transparent);
   pointer-events: none;
+  z-index: 1;
 }
 
-/* Cyber Button - No white lines */
+.glass-panel:hover {
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.5),
+    0 0 25px rgba(0, 210, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  transform: translateY(-2px);
+}
+
+/* ─── Hologram Card ─────────────────────── */
+.hologram-card {
+  background: rgba(12, 12, 22, 0.5);
+  backdrop-filter: blur(20px);
+  border-radius: 18px;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-medium);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.hologram-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(181, 56, 255, 0.4), rgba(0, 210, 255, 0.4), transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hologram-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 210, 255, 0.1);
+}
+
+/* ─── Neon Button ───────────────────────── */
 .neon-button {
-  background: rgba(0, 0, 0, 0.2);
-  color: #fff;
-  padding: 12px 28px;
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
   border: none;
+  padding: 11px 26px;
+  border-radius: 10px;
   font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: inset 0 0 10px rgba(0, 210, 255, 0.1);
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-fast);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.neon-button::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+  transition: left 0.5s ease;
+}
+
+.neon-button:hover::after { left: 100%; }
+.neon-button:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
 }
 
 .neon-button.primary {
-  background: linear-gradient(135deg, rgba(181, 56, 255, 0.2), rgba(0, 210, 255, 0.2));
-  box-shadow: 0 0 15px rgba(181, 56, 255, 0.2);
+  background: linear-gradient(135deg, rgba(181, 56, 255, 0.2), rgba(0, 210, 255, 0.15));
+  box-shadow: inset 0 0 0 1px rgba(181, 56, 255, 0.3), 0 0 20px rgba(181, 56, 255, 0.1);
 }
-
 .neon-button.primary:hover {
-  background: linear-gradient(135deg, rgba(181, 56, 255, 0.3), rgba(0, 210, 255, 0.3));
-  box-shadow: 0 0 25px rgba(181, 56, 255, 0.5);
+  background: linear-gradient(135deg, rgba(181, 56, 255, 0.35), rgba(0, 210, 255, 0.25));
+  box-shadow: inset 0 0 0 1px rgba(181, 56, 255, 0.5), 0 0 30px rgba(181, 56, 255, 0.3);
   transform: translateY(-2px);
 }
 
 .neon-button.success {
   color: var(--neon-green);
-  box-shadow: 0 0 15px rgba(0, 255, 136, 0.1) inset;
+  background: rgba(0, 255, 136, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(0, 255, 136, 0.25), 0 0 15px rgba(0, 255, 136, 0.08);
 }
-
 .neon-button.success:hover {
-  background: rgba(0, 255, 136, 0.1);
-  box-shadow: 0 0 25px rgba(0, 255, 136, 0.3);
+  background: rgba(0, 255, 136, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(0, 255, 136, 0.4), 0 0 25px rgba(0, 255, 136, 0.3);
+  color: #fff;
   transform: translateY(-2px);
 }
 
-/* Animations without white lines */
-@keyframes scan-ray {
-  0% { transform: translateY(-100%); opacity: 0; }
-  20% { opacity: 0.3; }
-  80% { opacity: 0.3; }
-  100% { transform: translateY(400%); opacity: 0; }
+/* ─── Input ─────────────────────────────── */
+.neon-input {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-glass);
+  color: var(--text-primary);
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  outline: none;
+  width: 100%;
+  transition: all var(--transition-fast);
+}
+.neon-input:focus {
+  border-color: rgba(0, 210, 255, 0.4);
+  box-shadow: 0 0 15px rgba(0, 210, 255, 0.15);
 }
 
+/* ─── Container ─────────────────────────── */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ─── Animations ────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fadeIn 0.5s ease forwards; }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up { animation: slideUp 0.6s ease forwards; }
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+.animate-pulse-glow { animation: pulseGlow 2.5s infinite ease-in-out; }
+
+@keyframes flicker {
+  0%, 20%, 100% { opacity: 1; }
+  10% { opacity: 0.4; }
+  15% { opacity: 0.9; }
+}
+.flicker { animation: flicker 4s infinite; }
+
+/* ─── Scan Ray (hologram cards) ─────────── */
+@keyframes scan-ray {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  20%  { opacity: 0.4; }
+  80%  { opacity: 0.4; }
+  100% { transform: translateY(800%); opacity: 0; }
+}
 .scan-ray {
   position: absolute;
   top: 0; left: 0; right: 0; height: 1px;
-  background: var(--neon-blue);
-  box-shadow: 0 0 12px var(--neon-blue);
-  animation: scan-ray 5s infinite;
+  background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+  box-shadow: 0 0 8px var(--neon-blue);
+  animation: scan-ray 6s infinite;
   pointer-events: none;
+  z-index: 2;
 }
 
+/* ─── Moving Cyber Grid (body bg) ───────── */
 @keyframes grid-move {
   from { background-position: 0 0; }
-  to { background-position: 0 60px; }
+  to   { background-position: 0 60px; }
 }
-
 .cyber-grid-animated {
-  background-image: 
-    linear-gradient(rgba(0, 210, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 210, 255, 0.03) 1px, transparent 1px);
+  background-image:
+    linear-gradient(rgba(0, 210, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 210, 255, 0.025) 1px, transparent 1px);
   background-size: 60px 60px;
-  animation: grid-move 15s linear infinite;
-  z-index: -1;
-  position: fixed;
-  inset: 0;
+  animation: grid-move 20s linear infinite;
 }
 
+/* ─── Noise overlay ─────────────────────── */
 .noise-bg {
-  position: fixed;
-  inset: 0;
-  background: url('https://grainy-gradients.vercel.app/noise.svg');
-  opacity: 0.03;
+  position: fixed; inset: 0;
+  opacity: 0.025;
   pointer-events: none;
-  z-index: 1000;
+  z-index: 900;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
 }
 
+/* ─── Glitch hover ──────────────────────── */
 .glitch-hover:hover {
-  text-shadow: 2px 0 var(--neon-purple), -2px 0 var(--neon-blue);
-  opacity: 0.8;
+  text-shadow: 1px 0 var(--neon-purple), -1px 0 var(--neon-blue);
+  transition: text-shadow 0.1s;
 }
+.hover-glow:hover {
+  filter: drop-shadow(0 0 6px var(--neon-blue));
+  transform: translateY(-2px);
+  transition: all 0.2s;
+}
+
+
+
