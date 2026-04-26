@@ -6,25 +6,34 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
 
-const connectionString = process.env.DATABASE_URL
-
-let prismaInstance: PrismaClient
-
-if (connectionString) {
+function createPrismaClient(): PrismaClient {
+  const connectionString = process.env.DATABASE_URL
+  if (!connectionString) {
+    throw new Error(
+      "DATABASE_URL is not set. PrismaClient cannot be used at build time."
+    )
+  }
   const pool = new pg.Pool({ connectionString })
   const adapter = new PrismaPg(pool)
-  prismaInstance = new PrismaClient({ adapter })
-} else {
-  // Fallback for build time - Prisma 7 requires a valid-looking URL or adapter even if not used
-  prismaInstance = new PrismaClient({
-    datasources: {
-      db: {
-        url: "postgresql://dummy:dummy@localhost:5432/dummy"
-      }
-    }
-  })
+  return new PrismaClient({ adapter })
 }
 
-export const prisma = globalForPrisma.prisma ?? prismaInstance
+function getPrismaClient(): PrismaClient {
+  if (!globalForPrisma.prisma) {
+    globalForPrisma.prisma = createPrismaClient()
+  }
+  return globalForPrisma.prisma
+}
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma
+// Lazy proxy: PrismaClient is only constructed when a method/property is accessed at runtime.
+// This allows Next.js to safely import this module during build without triggering Prisma initialization.
+export const prisma = new Proxy({} as PrismaClient, {
+  get(_target, prop) {
+    const client = getPrismaClient()
+    const value = client[prop as keyof PrismaClient]
+    if (typeof value === "function") {
+      return value.bind(client)
+    }
+    return value
+  },
+})
