@@ -1,6 +1,6 @@
 "use client"
 import React from 'react';
-import { Code2, Network, Shield } from 'lucide-react';
+import { Code2, Network, Shield, User } from 'lucide-react';
 
 // Github SVG Component
 const GithubIcon = ({ size = 24, className = "" }) => (
@@ -73,11 +73,20 @@ export default function LoginPage() {
 
            <button 
               className="neon-button success animate-pulse-glow" 
-              style={{ padding: '16px 32px', fontSize: '1.1rem', width: '100%' }}
+              style={{ padding: '16px 32px', fontSize: '1.1rem', width: '100%', marginBottom: '16px' }}
               onClick={() => signIn('github', { callbackUrl: '/' })}
             >
               <GithubIcon size={20} />
               Connect with GitHub
+           </button>
+
+           <button 
+              className="neon-button" 
+              style={{ padding: '12px 32px', fontSize: '1rem', width: '100%', borderColor: 'var(--neon-blue)', color: 'var(--neon-blue)' }}
+              onClick={() => signIn('credentials', { callbackUrl: '/' })}
+            >
+              <User size={18} />
+              GUEST_ACCESS (Limited)
            </button>
            
            <p style={{ marginTop: '24px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
