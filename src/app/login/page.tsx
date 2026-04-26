@@ -13,8 +13,10 @@ export default function LoginPage() {
   return (
     <div className="animate-fade-in" style={{ 
       display: 'flex', flexDirection: 'column', alignItems: 'center', 
-      justifyContent: 'center', minHeight: 'calc(100vh - 200px)' 
+      justifyContent: 'center', minHeight: 'calc(100vh - 200px)',
+      position: 'relative'
     }}>
+      <div className="matrix-bg" />
       
       <div className="glass-panel" style={{ 
         width: '100%', maxWidth: '900px', display: 'flex', 
