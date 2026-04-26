@@ -264,7 +264,7 @@ export default function WorkspacePage() {
                     </div>
                     <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{repo.desc}</p>
                   </div>
-                  <div style={{ display: 'flex', gap: '12px', color: 'var(--text-muted)', fontSize: '0.82rem', fontFamily: "'Fira Code', monospace' }}>
+                  <div style={{ display: 'flex', gap: '12px', color: 'var(--text-muted)', fontSize: '0.82rem', fontFamily: "'Fira Code', monospace" }}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Star size={12} style={{ color: 'var(--neon-green)' }} /> {repo.stars}</span>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><GitBranch size={12} /> fork</span>
                   </div>

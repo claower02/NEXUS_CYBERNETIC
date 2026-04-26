@@ -100,11 +100,11 @@ export default function IntelPage() {
               display: 'flex', alignItems: 'center', gap: '6px',
               padding: '8px 16px', borderRadius: '10px', border: 'none', cursor: 'pointer',
               fontSize: '0.82rem', fontFamily: "'Fira Code', monospace",
-              background: activeCategory === cat.id ? `rgba(255,255,255,0.08)` : 'rgba(255,255,255,0.03)',
+              background: activeCategory === cat.id ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.03)',
               color: activeCategory === cat.id ? cat.color : 'var(--text-muted)',
               boxShadow: activeCategory === cat.id ? `inset 0 0 0 1px ${cat.color}40` : 'none',
               transition: 'all 0.2s',
-            }} style={{ color: activeCategory === cat.id ? cat.color : 'var(--text-muted)' } as React.CSSProperties}>
+            }}>
               {cat.icon} {cat.label}
             </button>
           ))}

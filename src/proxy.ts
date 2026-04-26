@@ -4,7 +4,7 @@ import { getToken } from "next-auth/jwt"
 
 const secret = process.env.NEXTAUTH_SECRET || "nexus_cybernetic_default_secret_2025_secure_vault"
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Always allow: login page, API auth routes, static assets
@@ -21,7 +21,6 @@ export async function middleware(request: NextRequest) {
   const token = await getToken({ req: request, secret })
 
   if (!token) {
-    // Not logged in → redirect to login
     const loginUrl = new URL("/login", request.url)
     loginUrl.searchParams.set("callbackUrl", request.url)
     return NextResponse.redirect(loginUrl)
