@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
 import { Heart, MessageSquare, Share2, Code, GitBranch, Star, FolderGit2, Zap, TrendingUp, Clock, Bookmark } from "lucide-react"
@@ -37,6 +37,17 @@ export default function Home() {
   const [likedPosts, setLikedPosts] = useState<Set<number>>(new Set([2]))
   const [savedPosts, setSavedPosts] = useState<Set<number>>(new Set([3]))
   const [activeFilter, setActiveFilter] = useState("new")
+  const [loadingPosts, setLoadingPosts] = useState(true)
+
+  useEffect(() => {
+    fetch("/api/posts")
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) setLocalPosts(data)
+        setLoadingPosts(false)
+      })
+      .catch(() => setLoadingPosts(false))
+  }, [])
 
   const handleLike = (id: number) => {
     setLikedPosts(prev => {
@@ -55,24 +66,28 @@ export default function Home() {
     })
   }
 
-  const handlePublish = () => {
+  const handlePublish = async () => {
     if (!postText.trim()) return
-    const newPost = {
-      id: Date.now(),
-      author: session?.user?.name?.toLowerCase().replace(/\s/g, '_') || "guest_node",
-      name: session?.user?.name || "Guest Node",
-      role: "NEXUS Member",
-      avatar: session?.user?.image || `https://api.dicebear.com/7.x/avataaars/svg?seed=${Date.now()}`,
-      content: postText,
-      code: showCode ? codeText : undefined,
-      repo: undefined,
-      tags: [],
-      likes: 0, comments: 0,
-      time: "только что",
-      liked: false, saved: false,
+    
+    try {
+      const res = await fetch("/api/posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content: postText,
+          code: showCode ? codeText : undefined,
+          language: showCode ? "typescript" : undefined,
+        })
+      })
+
+      if (res.ok) {
+        const newPost = await res.json()
+        setLocalPosts([newPost, ...localPosts])
+        setPostText(""); setCodeText(""); setShowCode(false); setShowRepo(false)
+      }
+    } catch (error) {
+      alert("Ошибка при публикации")
     }
-    setLocalPosts([newPost, ...localPosts])
-    setPostText(""); setCodeText(""); setShowCode(false); setShowRepo(false)
   }
 
   return (
@@ -162,7 +177,12 @@ export default function Home() {
         </div>
 
         {/* Posts */}
-        {localPosts.length === 0 ? (
+        {loadingPosts ? (
+          <div style={{ textAlign: 'center', padding: '100px' }}>
+             <div className="spinner" style={{ borderTopColor: 'var(--neon-blue)', width: '30px', height: '30px', margin: '0 auto 16px', borderRadius: '50%', border: '2px solid rgba(0,210,255,0.1)', borderTop: '2px solid var(--neon-blue)', animation: 'spin 1s linear infinite' }} />
+             <p className="mono" style={{ color: 'var(--text-muted)' }}>DOWNLOADING_DATA_STREAM...</p>
+          </div>
+        ) : localPosts.length === 0 ? (
           <div className="glass-panel" style={{ padding: '60px 20px', textAlign: 'center', opacity: 0.8 }}>
             <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(0,210,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', border: '1px solid rgba(0,210,255,0.1)' }}>
               <Code size={28} className="text-neon-blue opacity-50" />
@@ -176,15 +196,17 @@ export default function Home() {
 
             {/* Author */}
             <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start', marginBottom: '18px' }}>
-              <img src={post.avatar} alt={post.name} style={{ width: '46px', height: '46px', borderRadius: '12px', border: '2px solid rgba(0,210,255,0.2)', flexShrink: 0 }} />
+              <img src={post.author?.image || `https://api.dicebear.com/7.x/avataaars/svg?seed=${post.id}`} alt={post.author?.name} style={{ width: '46px', height: '46px', borderRadius: '12px', border: '2px solid rgba(0,210,255,0.2)', flexShrink: 0 }} />
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div>
-                    <span style={{ fontWeight: 600, fontSize: '0.95rem' }}>{post.name}</span>
-                    <span className="mono" style={{ color: 'var(--neon-blue)', fontSize: '0.8rem', marginLeft: '8px' }}>@{post.author}</span>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '2px', fontFamily: "'Fira Code', monospace" }}>{post.role}</div>
+                    <span style={{ fontWeight: 600, fontSize: '0.95rem' }}>{post.author?.name}</span>
+                    <span className="mono" style={{ color: 'var(--neon-blue)', fontSize: '0.8rem', marginLeft: '8px' }}>@{post.author?.name?.toLowerCase().replace(/\s+/g, '_')}</span>
+                    <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '2px', fontFamily: "'Fira Code', monospace" }}>NEXUS Member</div>
                   </div>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: "'Fira Code', monospace", whiteSpace: 'nowrap' }}>{post.time}</span>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: "'Fira Code', monospace", whiteSpace: 'nowrap' }}>
+                    {new Date(post.createdAt).toLocaleDateString()}
+                  </span>
                 </div>
               </div>
             </div>

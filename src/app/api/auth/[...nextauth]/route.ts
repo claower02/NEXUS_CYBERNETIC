@@ -2,8 +2,11 @@ import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { prisma } from "@/lib/prisma";
 
 const handler = NextAuth({
+  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       id: "credentials",
@@ -52,16 +55,22 @@ const handler = NextAuth({
       if (user) {
         token.id = user.id;
       }
-      // Explicitly cast profile to any to access login safely, or check if login exists
-      if (profile && 'login' in profile) {
-        token.login = profile.login;
+      if (profile && 'login' in (profile as any)) {
+        token.login = (profile as any).login;
+        // Сохраняем логин гитхаба в базу, если его там нет
+        if (user?.id) {
+           await prisma.user.update({
+             where: { id: user.id },
+             data: { githubLogin: (profile as any).login }
+           }).catch(() => {});
+        }
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token, user }) {
       if (session.user) {
         // @ts-ignore
-        session.user.id = token.id;
+        session.user.id = user?.id || token.id;
         // @ts-ignore
         session.user.login = token.login;
       }
