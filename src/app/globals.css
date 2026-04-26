@@ -12,6 +12,7 @@
   --transition-medium: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Modern Cybernetic UI Reset */
 * {
   margin: 0;
   padding: 0;
@@ -19,238 +20,128 @@
 }
 
 body {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+  background-color: #020205;
+  color: #ffffff;
   font-family: 'Outfit', sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
+  /* Deep atmosphere background */
   background-image: 
-    radial-gradient(circle at 15% 50%, rgba(0, 255, 136, 0.03), transparent 25%),
-    radial-gradient(circle at 85% 30%, rgba(181, 56, 255, 0.03), transparent 25%);
+    radial-gradient(circle at 20% 20%, rgba(0, 210, 255, 0.05), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(181, 56, 255, 0.05), transparent 40%);
 }
 
-/* Typography */
-h1, h2, h3, h4 {
-  font-weight: 700;
-  letter-spacing: -0.03em;
-}
+.mono { font-family: 'Fira Code', monospace; }
 
-.mono {
-  font-family: 'Fira Code', monospace;
-}
-
-/* Glassmorphism Panel */
-.glass-panel {
-  background: var(--bg-glass);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border-glass);
-  border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  transition: transform var(--transition-fast), border-color var(--transition-medium);
-}
-
-.glass-panel:hover {
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-/* Neon Text Effects */
-.text-neon-green {
-  color: var(--neon-green);
-  text-shadow: 0 0 10px var(--neon-green-glow);
-}
-
-.text-neon-purple {
-  color: var(--neon-purple);
-  text-shadow: 0 0 10px var(--neon-purple-glow);
-}
-
-.text-neon-blue {
-  color: var(--neon-blue);
-  text-shadow: 0 0 10px var(--neon-blue-glow);
-}
-
-/* Neon Button */
-.neon-button {
-  background: transparent;
-  color: var(--text-primary);
-  border: 1px solid var(--border-glass);
-  padding: 10px 24px;
-  border-radius: 8px;
-  font-family: 'Fira Code', monospace;
-  font-size: 0.9rem;
-  cursor: pointer;
+/* Borderless Glass Panels with Soft Glow */
+.glass-panel, .hologram-card {
+  background: rgba(15, 15, 25, 0.4);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-radius: 20px;
   position: relative;
-  overflow: hidden;
-  transition: all var(--transition-fast);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  z-index: 1;
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow: 0 10px 40px -15px rgba(0,0,0,0.5);
 }
 
-.neon-button::before {
+.glass-panel:hover, .hologram-card:hover {
+  transform: translateY(-4px);
+  background: rgba(20, 20, 30, 0.5);
+  box-shadow: 0 0 30px -5px rgba(0, 210, 255, 0.15);
+}
+
+/* Edge Accents (Replacement for white borders) */
+.glass-panel::before, .hologram-card::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  transition: left 0.5s ease;
-  z-index: -1;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 210, 255, 0.4), transparent);
+  border-radius: 20px 20px 0 0;
+  pointer-events: none;
 }
 
-.neon-button:hover::before {
-  left: 100%;
+/* Cyber Button - No white lines */
+.neon-button {
+  background: rgba(0, 0, 0, 0.2);
+  color: #fff;
+  padding: 12px 28px;
+  border-radius: 12px;
+  border: none;
+  font-family: 'Fira Code', monospace;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: inset 0 0 10px rgba(0, 210, 255, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .neon-button.primary {
-  border-color: var(--neon-purple);
-  box-shadow: 0 0 15px rgba(181, 56, 255, 0.1) inset;
+  background: linear-gradient(135deg, rgba(181, 56, 255, 0.2), rgba(0, 210, 255, 0.2));
+  box-shadow: 0 0 15px rgba(181, 56, 255, 0.2);
 }
 
 .neon-button.primary:hover {
-  background: rgba(181, 56, 255, 0.1);
-  box-shadow: 0 0 20px rgba(181, 56, 255, 0.4), 0 0 15px rgba(181, 56, 255, 0.2) inset;
-  text-shadow: 0 0 8px rgba(255,255,255,0.8);
+  background: linear-gradient(135deg, rgba(181, 56, 255, 0.3), rgba(0, 210, 255, 0.3));
+  box-shadow: 0 0 25px rgba(181, 56, 255, 0.5);
+  transform: translateY(-2px);
 }
 
 .neon-button.success {
-  border-color: var(--neon-green);
   color: var(--neon-green);
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.1) inset;
 }
 
 .neon-button.success:hover {
   background: rgba(0, 255, 136, 0.1);
-  box-shadow: 0 0 20px var(--neon-green-glow), 0 0 15px var(--neon-green-glow) inset;
-  color: #fff;
+  box-shadow: 0 0 25px rgba(0, 255, 136, 0.3);
+  transform: translateY(-2px);
 }
 
-/* Links */
-a {
-  color: inherit;
-  text-decoration: none;
-  transition: color var(--transition-fast);
+/* Animations without white lines */
+@keyframes scan-ray {
+  0% { transform: translateY(-100%); opacity: 0; }
+  20% { opacity: 0.3; }
+  80% { opacity: 0.3; }
+  100% { transform: translateY(400%); opacity: 0; }
 }
 
-a:hover {
-  color: var(--neon-blue);
-}
-
-/* Animations */
-@keyframes pulseGlow {
-  0% { opacity: 0.5; }
-  50% { opacity: 1; }
-  100% { opacity: 0.5; }
-}
-
-.animate-pulse-glow {
-  animation: pulseGlow 3s infinite ease-in-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-/* Input Fields */
-.neon-input {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid var(--border-glass);
-  color: var(--text-primary);
-  padding: 12px 16px;
-  border-radius: 8px;
-  font-family: 'Outfit', sans-serif;
-  outline: none;
-  width: 100%;
-  transition: all var(--transition-fast);
-}
-
-.neon-input:focus {
-  border-color: var(--neon-blue);
-  box-shadow: 0 0 15px var(--neon-blue-glow);
-}
-
-@keyframes flicker {
-  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 1; }
-  20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.4; }
-}
-
-@keyframes dataStream {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
-}
-
-.cyber-grid {
-  background-image: 
-    linear-gradient(rgba(0, 255, 136, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 136, 0.05) 1px, transparent 1px);
-  background-size: 50px 50px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -2;
+.scan-ray {
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: var(--neon-blue);
+  box-shadow: 0 0 12px var(--neon-blue);
+  animation: scan-ray 5s infinite;
   pointer-events: none;
 }
 
-@keyframes glitch {
-  0% { transform: translate(0); }
-  20% { transform: translate(-2px, 2px); }
-  40% { transform: translate(-2px, -2px); }
-  60% { transform: translate(2px, 2px); }
-  80% { transform: translate(2px, -2px); }
-  100% { transform: translate(0); }
+@keyframes grid-move {
+  from { background-position: 0 0; }
+  to { background-position: 0 60px; }
+}
+
+.cyber-grid-animated {
+  background-image: 
+    linear-gradient(rgba(0, 210, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 210, 255, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: grid-move 15s linear infinite;
+  z-index: -1;
+  position: fixed;
+  inset: 0;
+}
+
+.noise-bg {
+  position: fixed;
+  inset: 0;
+  background: url('https://grainy-gradients.vercel.app/noise.svg');
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 1000;
 }
 
 .glitch-hover:hover {
-  animation: glitch 0.2s linear infinite;
-  color: var(--neon-purple);
-  text-shadow: 2px 0 var(--neon-blue), -2px 0 var(--neon-green);
-}
-
-.circuit-overlay {
-  background-image: radial-gradient(var(--neon-blue) 0.5px, transparent 0.5px);
-  background-size: 15px 15px;
-  opacity: 0.1;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-}
-
-@keyframes neon-pulse {
-  0% { box-shadow: 0 0 5px var(--neon-blue); }
-  50% { box-shadow: 0 0 20px var(--neon-blue); }
-  100% { box-shadow: 0 0 5px var(--neon-blue); }
-}
-
-.pulse-border {
-  animation: neon-pulse 2s infinite;
-  border: 1px solid var(--neon-blue);
-}
-
-.flicker { animation: flicker 3s linear infinite; }
-
-.data-column {
-  position: absolute;
-  top: 0;
-  width: 1px;
-  height: 100%;
-  background: linear-gradient(180deg, transparent, var(--neon-green), transparent);
-  opacity: 0.2;
-}
-
-.hover-glow:hover {
-  filter: drop-shadow(0 0 8px var(--neon-blue));
-  transform: translateY(-2px);
+  text-shadow: 2px 0 var(--neon-purple), -2px 0 var(--neon-blue);
+  opacity: 0.8;
 }

@@ -66,8 +66,9 @@ export default function LoginPage() {
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           className="glass-panel" 
-          style={{ padding: '40px', borderLeft: '4px solid var(--neon-purple)', position: 'relative', overflow: 'hidden' }}
+          style={{ padding: '40px', position: 'relative', overflow: 'hidden' }}
         >
+           <div style={{ position: 'absolute', top: 0, left: 0, width: '2px', height: '100%', background: 'var(--neon-purple)' }} />
            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px' }}>
               <TerminalIcon className="text-neon-purple flicker" size={24} />
               <h3 className="mono text-neon-purple" style={{ letterSpacing: '2px' }}>SYSTEM_LOGS</h3>
