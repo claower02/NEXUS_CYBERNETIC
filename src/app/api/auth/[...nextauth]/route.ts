@@ -61,10 +61,10 @@ const handler = NextAuth({
         token.login = (profile as any).login;
         // Сохраняем логин гитхаба в базу, если его там нет
         if (user?.id) {
-           await prisma.user.update({
-             where: { id: user.id },
-             data: { githubLogin: (profile as any).login }
-           }).catch(() => {});
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { githubLogin: (profile as any).login }
+          }).catch(() => { });
         }
       }
       return token;

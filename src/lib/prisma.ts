@@ -9,35 +9,27 @@ const globalForPrisma = globalThis as unknown as {
 function createPrismaClient(): PrismaClient {
   const connectionString = process.env.DATABASE_URL
   
-  if (connectionString) {
-    const pool = new pg.Pool({ connectionString })
+  // Если мы в браузере или нет строки подключения, возвращаем пустышку
+  // Это предотвратит краш Client Components
+  if (typeof window !== "undefined" || !connectionString) {
+    return new Proxy({} as PrismaClient, {
+      get() {
+        throw new Error("PrismaClient cannot be used on the client side or without DATABASE_URL.")
+      }
+    })
+  }
+
+  try {
+    const pool = new pg.Pool({ connectionString, max: 10 })
     const adapter = new PrismaPg(pool)
     return new PrismaClient({ adapter })
-  } else {
-    // В Prisma 7 если нет URL, используем стандартный конструктор.
-    // Окружение для сборки мы обеспечим в Dockerfile.
-    return new PrismaClient()
+  } catch (error) {
+    console.error("Failed to initialize Prisma:", error)
+    return new PrismaClient() // Fallback
   }
 }
 
-function getPrismaClient(): PrismaClient {
-  if (!globalForPrisma.prisma) {
-    globalForPrisma.prisma = createPrismaClient()
-  }
-  return globalForPrisma.prisma
-}
-
-// Lazy proxy: PrismaClient инициализируется только при первом реальном обращении.
-// Это позволяет Next.js безопасно импортировать этот модуль во время сборки.
-export const prisma = new Proxy({} as PrismaClient, {
-  get(_target, prop) {
-    const client = getPrismaClient()
-    const value = client[prop as keyof PrismaClient]
-    if (typeof value === "function") {
-      return value.bind(client)
-    }
-    return value
-  },
-})
+// Singleton для работы в Next.js (предотвращает утечки соединений при hot-reload)
+export const prisma = globalForPrisma.prisma ?? createPrismaClient()
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma
