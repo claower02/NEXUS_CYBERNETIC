@@ -47,19 +47,31 @@ export default function Home() {
     fetch("/api/posts")
       .then(res => res.json())
       .then(data => {
-        if (Array.isArray(data)) setLocalPosts(data)
+        if (Array.isArray(data)) {
+          setLocalPosts(data)
+        } else {
+          setLocalPosts([])
+        }
         setLoadingPosts(false)
       })
-      .catch(() => setLoadingPosts(false))
+      .catch(() => {
+        setLocalPosts([])
+        setLoadingPosts(false)
+      })
 
     // Fetch user's repos for selection if logged in via github
     const login = (session?.user as any)?.login
     if (login) {
-      fetch(`https://api.github.com/users/${login}/repos?sort=updated&per_page=15`)
+      fetch(`https://api.github.com/users/${login}/repos?sort=updated&per_page=10`)
         .then(res => res.json())
         .then(data => {
-          if (Array.isArray(data)) setUserRepos(data)
+          if (Array.isArray(data)) {
+            setUserRepos(data)
+          } else {
+            setUserRepos([])
+          }
         })
+        .catch(() => setUserRepos([]))
     }
   }, [session])
 
@@ -168,9 +180,9 @@ export default function Home() {
                   maxHeight: '200px', overflowY: 'auto', padding: '8px', display: 'flex', flexDirection: 'column', gap: '4px'
                 }}>
                   <p className="mono" style={{ fontSize: '0.7rem', color: 'var(--text-muted)', padding: '4px 8px' }}>ВЫБЕРИТЕ РЕПОЗИТОРИЙ [GITHUB_GRID]</p>
-                  {userRepos.length === 0 ? (
+                  {!userRepos || userRepos.length === 0 ? (
                     <p style={{ padding: '12px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>Репозитории не найдены.</p>
-                  ) : userRepos.map(repo => (
+                  ) : Array.isArray(userRepos) && userRepos.map(repo => (
                     <div 
                       key={repo.id}
                       onClick={() => setSelectedRepo(selectedRepo?.id === repo.id ? null : repo)}
@@ -242,7 +254,7 @@ export default function Home() {
              <div className="spinner" style={{ borderTopColor: 'var(--neon-blue)', width: '30px', height: '30px', margin: '0 auto 16px', borderRadius: '50%', border: '2px solid rgba(0,210,255,0.1)', borderTop: '2px solid var(--neon-blue)', animation: 'spin 1s linear infinite' }} />
              <p className="mono" style={{ color: 'var(--text-muted)' }}>DOWNLOADING_DATA_STREAM...</p>
           </div>
-        ) : localPosts.length === 0 ? (
+        ) : (!localPosts || localPosts.length === 0) ? (
           <div className="glass-panel" style={{ padding: '60px 20px', textAlign: 'center', opacity: 0.8 }}>
             <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(0,210,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', border: '1px solid rgba(0,210,255,0.1)' }}>
               <Code size={28} className="text-neon-blue opacity-50" />
