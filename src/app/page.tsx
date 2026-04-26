@@ -11,48 +11,7 @@ const GithubIcon = ({ size = 16 }) => (
   </svg>
 )
 
-const posts = [
-  {
-    id: 1,
-    author: "cipher_root",
-    name: "Alex K.",
-    role: "Systems Engineer",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=cipher",
-    content: "Переписал наш лог-парсер с Node.js на Rust. Результат — ×14 по скорости, ×3 по памяти. Теперь 500k строк/сек на одном ядре. Если кто работает с высоконагруженными системами — рекомендую смотреть в сторону nom + tokio.",
-    code: `fn parse_log(input: &str) -> IResult<&str, LogEntry> {
-  let (i, ts) = parse_timestamp(input)?;
-  let (i, level) = parse_level(i)?;
-  Ok((i, LogEntry { timestamp: ts, level }))
-}`,
-    tags: ["#rust", "#performance", "#parsing"],
-    likes: 248, comments: 41, time: "2ч назад", liked: false, saved: false,
-  },
-  {
-    id: 2,
-    author: "neon_architect",
-    name: "Maya S.",
-    role: "Frontend Lead",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=neon",
-    content: "Выкладываю в паблик свой UI-кит на glassmorphism. Используется в трёх продакшн-проектах. PR welcome — хочу добавить поддержку темизации и более гибкую систему spacing.",
-    repo: {
-      name: "neon-glass-ui",
-      desc: "Premium glassmorphism React component library with cyberpunk aesthetics",
-      stars: 1240, forks: 187, lang: "TypeScript", topics: ["react", "ui", "glassmorphism"],
-    },
-    tags: ["#ui", "#react", "#opensource"],
-    likes: 512, comments: 94, time: "4ч назад", liked: true, saved: false,
-  },
-  {
-    id: 3,
-    author: "zero_day_dev",
-    name: "Dmitri V.",
-    role: "Security Researcher",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=zero",
-    content: "Обнаружил интересный паттерн в современных LLM: при определённых prompt-конструкциях модель начинает 'галлюцинировать' с предсказуемым bias. Пишу статью. Пока — вот визуализация распределения по 10k запросов.",
-    tags: ["#llm", "#security", "#ai", "#research"],
-    likes: 387, comments: 63, time: "7ч назад", liked: false, saved: true,
-  },
-]
+const posts: any[] = []
 
 const trendingTopics = [
   { tag: "#rust", posts: "2.4k" },
@@ -117,10 +76,10 @@ export default function Home() {
   }
 
   return (
-    <div className="animate-fade-in" style={{ display: 'flex', gap: '28px', alignItems: 'flex-start' }}>
+    <div className="animate-fade-in page-layout">
 
       {/* ── Main Feed ── */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px', minWidth: 0 }}>
+      <div className="page-main">
 
         {/* Create Post */}
         <div className="glass-panel" style={{ padding: '24px' }}>
@@ -203,7 +162,15 @@ export default function Home() {
         </div>
 
         {/* Posts */}
-        {localPosts.map((post, i) => (
+        {localPosts.length === 0 ? (
+          <div className="glass-panel" style={{ padding: '60px 20px', textAlign: 'center', opacity: 0.8 }}>
+            <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(0,210,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', border: '1px solid rgba(0,210,255,0.1)' }}>
+              <Code size={28} className="text-neon-blue opacity-50" />
+            </div>
+            <h3 style={{ fontSize: '1.2rem', marginBottom: '8px' }}>Лента пуста</h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', maxWidth: '300px', margin: '0 auto' }}>Публикаций еще нет. Станьте первым, кто поделится своими идеями!</p>
+          </div>
+        ) : localPosts.map((post, i) => (
           <article key={post.id} className="hologram-card" style={{ padding: '28px', animationDelay: `${i * 0.1}s` }}>
             <div className="scan-ray" style={{ animationDelay: `${i * 2}s` }} />
 
@@ -259,7 +226,7 @@ export default function Home() {
                 </div>
                 <p style={{ marginTop: '8px', fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>{post.repo.desc}</p>
                 <div style={{ marginTop: '10px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                  {post.repo.topics.map(t => (
+                  {post.repo.topics.map((t: string) => (
                     <span key={t} className="mono" style={{ fontSize: '0.72rem', padding: '2px 8px', borderRadius: '6px', background: 'rgba(0,210,255,0.08)', color: 'var(--neon-blue)' }}>
                       #{t}
                     </span>
@@ -271,7 +238,7 @@ export default function Home() {
             {/* Tags */}
             {post.tags.length > 0 && (
               <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '18px' }}>
-                {post.tags.map(tag => (
+                {post.tags.map((tag: string) => (
                   <span key={tag} className="mono" style={{ fontSize: '0.8rem', color: 'var(--neon-blue)', opacity: 0.7 }}>{tag}</span>
                 ))}
               </div>
@@ -323,7 +290,7 @@ export default function Home() {
       </div>
 
       {/* ── Right Sidebar ── */}
-      <div style={{ width: '290px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div className="page-sidebar">
 
         {/* INTEL widget */}
         <div className="glass-panel" style={{ padding: '20px' }}>

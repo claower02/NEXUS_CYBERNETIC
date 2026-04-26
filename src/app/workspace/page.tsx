@@ -66,10 +66,10 @@ export default function WorkspacePage() {
   }, [isGuest, session])
 
   return (
-    <div className="animate-fade-in" style={{ display: 'flex', gap: '28px', alignItems: 'flex-start' }}>
+    <div className="animate-fade-in page-layout">
 
       {/* Sidebar Profile Card */}
-      <div style={{ width: '280px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div className="page-sidebar">
 
         <div className="glass-panel" style={{ padding: '28px', textAlign: 'center' }}>
           {/* Avatar */}
@@ -177,7 +177,7 @@ export default function WorkspacePage() {
       </div>
 
       {/* Main area */}
-      <div style={{ flex: 1, minWidth: 0 }}>
+      <div className="page-main">
 
         {/* Tabs */}
         <div style={{ display: 'flex', gap: '4px', marginBottom: '20px' }}>

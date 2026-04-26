@@ -63,10 +63,10 @@ export default function IntelPage() {
   }
 
   return (
-    <div className="animate-fade-in" style={{ display: 'flex', gap: '28px', alignItems: 'flex-start' }}>
+    <div className="animate-fade-in page-layout">
 
       {/* Main Column */}
-      <div style={{ flex: 1, minWidth: 0 }}>
+      <div className="page-main">
 
         {/* Header */}
         <div className="glass-panel" style={{ padding: '24px', marginBottom: '20px' }}>
@@ -124,7 +124,7 @@ export default function IntelPage() {
                 }}>
                   {CATEGORIES.find(c => c.id === item.category)?.icon}
                 </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
+                <div className="page-main">
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', marginBottom: '8px' }}>
                     <h3 style={{ fontSize: '0.95rem', fontWeight: 600, lineHeight: 1.4, flex: 1 }}>
                       {item.hot && <span style={{ display: 'inline-block', marginRight: '8px', fontSize: '0.7rem', padding: '2px 6px', borderRadius: '4px', background: 'rgba(255,56,96,0.15)', color: 'var(--neon-red)', fontFamily: "'Fira Code', monospace", verticalAlign: 'middle' }}>HOT</span>}
@@ -144,7 +144,7 @@ export default function IntelPage() {
       </div>
 
       {/* Right Sidebar */}
-      <div style={{ width: '280px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div className="page-sidebar">
 
         {/* Hot right now */}
         <div className="glass-panel" style={{ padding: '20px' }}>

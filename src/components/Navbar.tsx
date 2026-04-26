@@ -58,7 +58,7 @@ export function Navbar() {
       </Link>
 
       {/* Nav Links */}
-      <div style={{ display: 'flex', gap: '4px' }}>
+      <div className="desktop-nav-links" style={{ display: 'flex', gap: '4px' }}>
         {navLinks.map(link => {
           const isActive = pathname === link.href
           return (
@@ -165,6 +165,30 @@ export function Navbar() {
             </button>
           </div>
         )}
+      </div>
+
+      {/* Mobile Bottom Nav Bar */}
+      <div className="mobile-nav-bar">
+        {navLinks.map(link => {
+          const isActive = pathname === link.href
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px',
+                padding: '8px', 
+                color: isActive ? 'var(--neon-blue)' : 'rgba(255,255,255,0.6)',
+                transition: 'all 0.2s', textDecoration: 'none'
+              }}
+            >
+              <div style={{ padding: '6px', borderRadius: '50%', background: isActive ? 'rgba(0,210,255,0.15)' : 'transparent', border: isActive ? '1px solid rgba(0,210,255,0.3)' : '1px solid transparent' }}>
+                {link.icon}
+              </div>
+              <span style={{ fontSize: '0.65rem', fontFamily: "'Fira Code', monospace" }}>{link.label}</span>
+            </Link>
+          )
+        })}
       </div>
     </nav>
   )

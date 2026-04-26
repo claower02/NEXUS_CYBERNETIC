@@ -44,10 +44,10 @@ export default function NodesPage() {
   }
 
   return (
-    <div className="animate-fade-in" style={{ display: 'flex', gap: '28px', alignItems: 'flex-start' }}>
+    <div className="animate-fade-in page-layout">
 
       {/* Main */}
-      <div style={{ flex: 1, minWidth: 0 }}>
+      <div className="page-main">
         {/* Header */}
         <div className="glass-panel" style={{ padding: '24px', marginBottom: '20px' }}>
           <h1 className="mono" style={{ fontSize: '1.4rem', display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
@@ -108,7 +108,7 @@ export default function NodesPage() {
                     border: '2px solid rgba(8,8,18,0.9)',
                   }} />
                 </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
+                <div className="page-main">
                   <div style={{ fontWeight: 600, fontSize: '0.95rem' }}>{node.name}</div>
                   <div className="mono" style={{ color: 'var(--neon-blue)', fontSize: '0.78rem' }}>@{node.handle}</div>
                   <div style={{ color: 'var(--text-muted)', fontSize: '0.78rem', marginTop: '2px' }}>{node.role}</div>

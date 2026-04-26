@@ -121,10 +121,10 @@ export default function AIHubPage() {
   const getBarColor = (pct: number) => pct > 50 ? 'var(--neon-green)' : pct > 20 ? '#f7931a' : 'var(--neon-red)'
 
   return (
-    <div className="animate-fade-in" style={{ display: 'flex', gap: '28px', alignItems: 'flex-start' }}>
+    <div className="animate-fade-in page-layout">
 
       {/* Main */}
-      <div style={{ flex: 1, minWidth: 0 }}>
+      <div className="page-main">
 
         {/* Header */}
         <div className="glass-panel" style={{ padding: '24px', marginBottom: '24px' }}>
@@ -285,7 +285,7 @@ export default function AIHubPage() {
       </div>
 
       {/* Sidebar */}
-      <div style={{ width: '260px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div className="page-sidebar">
         <div className="glass-panel" style={{ padding: '20px' }}>
           <h4 className="mono" style={{ marginBottom: '16px', color: 'var(--text-muted)', fontSize: '0.8rem' }}>СВОДКА ТОКЕНОВ</h4>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>

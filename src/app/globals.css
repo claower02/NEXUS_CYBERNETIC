@@ -288,3 +288,98 @@ a:hover { color: var(--neon-blue); }
 
 
 
+/* --- Responsive Layout Utilities (Mobile + Tablet) ----------- */
+.page-layout {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+  width: 100%;
+}
+.page-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.page-sidebar {
+  width: 290px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.auth-grid {
+  width: 100%;
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  z-index: 1;
+}
+
+@media (max-width: 1024px) {
+  .page-layout {
+    gap: 20px;
+  }
+  .page-sidebar {
+    width: 250px;
+  }
+}
+
+@media (max-width: 800px) {
+  /* Layout shifts to vertical on mobile */
+  .page-layout {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .page-main, .page-sidebar {
+    width: 100%;
+  }
+
+  /* Main container adjustments */
+  body {
+    background-size: 100% 100%;
+    padding-bottom: 70px; /* Space for Bottom Nav Bar */
+  }
+
+  .container {
+    padding: 0 16px;
+  }
+
+  /* Auth Grid collapses to 1 column */
+  .auth-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  /* Hide System Logs on smallest screens */
+  .system-logs-panel {
+    display: none !important;
+  }
+}
+
+/* --- Mobile Bottom Nav Bar --------- */
+.mobile-nav-bar {
+  display: none;
+}
+@media (max-width: 800px) {
+  .mobile-nav-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: rgba(8, 8, 18, 0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+    justify-content: space-around;
+    align-items: center;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .desktop-nav-links {
+    display: none !important;
+  }
+}
