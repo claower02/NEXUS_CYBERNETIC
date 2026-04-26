@@ -70,6 +70,8 @@ function Navbar() {
   );
 }
 
+import { Providers } from "@/components/Providers";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -78,10 +80,12 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body>
-        <Navbar />
-        <main style={{ paddingTop: '100px', paddingBottom: '40px' }} className="container">
-          {children}
-        </main>
+        <Providers>
+          <Navbar />
+          <main style={{ paddingTop: '100px', paddingBottom: '40px' }} className="container">
+            {children}
+          </main>
+        </Providers>
       </body>
     </html>
   );

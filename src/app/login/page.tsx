@@ -9,6 +9,8 @@ const GithubIcon = ({ size = 24, className = "" }) => (
   </svg>
 );
 
+import { signIn } from "next-auth/react";
+
 export default function LoginPage() {
   return (
     <div className="animate-fade-in" style={{ 
@@ -69,11 +71,10 @@ export default function LoginPage() {
              Используйте ваш GitHub аккаунт для мгновенного доступа к платформе.
            </p>
 
-           {/* In a real Next.js app, this would use signIn('github') from next-auth/react */}
            <button 
               className="neon-button success animate-pulse-glow" 
               style={{ padding: '16px 32px', fontSize: '1.1rem', width: '100%' }}
-              onClick={() => alert("Интеграция NextAuth готова. Для работы требуется добавить GITHUB_ID и GITHUB_SECRET в .env")}
+              onClick={() => signIn('github', { callbackUrl: '/' })}
             >
               <GithubIcon size={20} />
               Connect with GitHub
