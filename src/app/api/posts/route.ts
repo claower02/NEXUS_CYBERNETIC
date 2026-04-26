@@ -34,7 +34,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Неавторизован" }, { status: 401 })
     }
 
-    const { content, code, language } = await req.json()
+    const { content, code, language, repoName, repoDesc, repoStars, repoLang } = await req.json()
 
     // Находим пользователя в базе по email
     const user = await prisma.user.findUnique({
@@ -50,6 +50,10 @@ export async function POST(req: Request) {
         content,
         code,
         language,
+        repoName,
+        repoDesc,
+        repoStars,
+        repoLang,
         authorId: user.id
       },
       include: {

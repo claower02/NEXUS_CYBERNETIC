@@ -54,6 +54,12 @@ model Post {
   authorId  String
   author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
+  // Attachments
+  repoName  String?
+  repoDesc  String?
+  repoStars Int?
+  repoLang  String?
+
   likes     Int      @default(0)
   comments  Int      @default(0)
 }

@@ -383,3 +383,49 @@ a:hover { color: var(--neon-blue); }
     display: none !important;
   }
 }
+/* --- Ultra-Adaptive Design Polish ----------- */
+@media (max-width: 600px) {
+  .hologram-card {
+    padding: 16px !important;
+    border-radius: 12px;
+  }
+  
+  .glass-panel {
+    padding: 16px !important;
+    border-radius: 12px;
+  }
+
+  h1 { font-size: 1.5rem !important; }
+  h2 { font-size: 1.3rem !important; }
+
+  /* Compact Post actions */
+  .post-actions button {
+    padding: 6px 10px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  /* Mobile-first spacing */
+  .page-main {
+    gap: 12px !important;
+  }
+}
+
+/* Custom Scrollbar for Cyberpunk feel */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-glass);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-blue-glow);
+}
+
+.repo-select-item:hover {
+  background: rgba(0, 210, 255, 0.1) !important;
+  border-color: rgba(0, 210, 255, 0.3) !important;
+}

@@ -33,11 +33,14 @@ export default function Home() {
   const [showCode, setShowCode] = useState(false)
   const [codeText, setCodeText] = useState("")
   const [showRepo, setShowRepo] = useState(false)
-  const [localPosts, setLocalPosts] = useState(posts)
+  const [localPosts, setLocalPosts] = useState<any[]>([])
   const [likedPosts, setLikedPosts] = useState<Set<number>>(new Set([2]))
   const [savedPosts, setSavedPosts] = useState<Set<number>>(new Set([3]))
   const [activeFilter, setActiveFilter] = useState("new")
   const [loadingPosts, setLoadingPosts] = useState(true)
+
+  const [userRepos, setUserRepos] = useState<any[]>([])
+  const [selectedRepo, setSelectedRepo] = useState<any>(null)
 
   useEffect(() => {
     fetch("/api/posts")
@@ -47,7 +50,17 @@ export default function Home() {
         setLoadingPosts(false)
       })
       .catch(() => setLoadingPosts(false))
-  }, [])
+
+    // Fetch user's repos for selection if logged in via github
+    const login = (session?.user as any)?.login
+    if (login) {
+      fetch(`https://api.github.com/users/${login}/repos?sort=updated&per_page=15`)
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) setUserRepos(data)
+        })
+    }
+  }, [session])
 
   const handleLike = (id: number) => {
     setLikedPosts(prev => {
@@ -77,13 +90,17 @@ export default function Home() {
           content: postText,
           code: showCode ? codeText : undefined,
           language: showCode ? "typescript" : undefined,
+          repoName: selectedRepo?.name,
+          repoDesc: selectedRepo?.description,
+          repoStars: selectedRepo?.stargazers_count,
+          repoLang: selectedRepo?.language,
         })
       })
 
       if (res.ok) {
         const newPost = await res.json()
         setLocalPosts([newPost, ...localPosts])
-        setPostText(""); setCodeText(""); setShowCode(false); setShowRepo(false)
+        setPostText(""); setCodeText(""); setShowCode(false); setShowRepo(false); setSelectedRepo(null)
       }
     } catch (error) {
       alert("Ошибка при публикации")
@@ -138,15 +155,46 @@ export default function Home() {
                 />
               )}
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              {showRepo && (
+                <div style={{ 
+                  background: 'rgba(0,0,0,0.3)', borderRadius: '12px', border: '1px solid rgba(0,210,255,0.2)',
+                  maxHeight: '200px', overflowY: 'auto', padding: '8px', display: 'flex', flexDirection: 'column', gap: '4px'
+                }}>
+                  <p className="mono" style={{ fontSize: '0.7rem', color: 'var(--text-muted)', padding: '4px 8px' }}>ВЫБЕРИТЕ РЕПОЗИТОРИЙ [GITHUB_GRID]</p>
+                  {userRepos.length === 0 ? (
+                    <p style={{ padding: '12px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>Репозитории не найдены.</p>
+                  ) : userRepos.map(repo => (
+                    <div 
+                      key={repo.id}
+                      onClick={() => setSelectedRepo(selectedRepo?.id === repo.id ? null : repo)}
+                      className="repo-select-item"
+                      style={{ 
+                        padding: '10px 14px', borderRadius: '8px', cursor: 'pointer',
+                        background: selectedRepo?.id === repo.id ? 'rgba(0,210,255,0.15)' : 'rgba(255,255,255,0.02)',
+                        border: selectedRepo?.id === repo.id ? '1px solid rgba(0,210,255,0.4)' : '1px solid transparent',
+                        display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <GithubIcon size={14} />
+                        <span style={{ fontSize: '0.85rem', fontWeight: 500 }}>{repo.name}</span>
+                      </div>
+                      {selectedRepo?.id === repo.id && <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--neon-blue)', boxShadow: '0 0 8px var(--neon-blue)' }} />}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <button className="neon-button" onClick={() => setShowCode(!showCode)}
                     style={{ padding: '7px 14px', fontSize: '0.8rem', background: showCode ? 'rgba(0,255,136,0.1)' : undefined }}>
                     <Code size={14} /> Код
                   </button>
                   <button className="neon-button" onClick={() => setShowRepo(!showRepo)}
-                    style={{ padding: '7px 14px', fontSize: '0.8rem' }}>
-                    <GithubIcon size={14} /> Репо
+                    style={{ padding: '7px 14px', fontSize: '0.8rem', background: showRepo ? 'rgba(0,210,255,0.1)' : undefined }}>
+                    <GithubIcon size={14} />
+                    {selectedRepo ? selectedRepo.name : "Репо"}
                   </button>
                 </div>
                 <button
@@ -227,33 +275,27 @@ export default function Home() {
             )}
 
             {/* Repo card */}
-            {post.repo && (
+            {post.repoName && (
               <div style={{
                 marginBottom: '16px', padding: '18px', borderRadius: '12px',
                 background: 'rgba(0,0,0,0.3)',
-                boxShadow: 'inset 0 0 0 1px rgba(181,56,255,0.2)',
+                boxShadow: 'inset 0 0 0 1px rgba(0,210,255,0.2)',
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <GithubIcon size={18} />
-                    <span style={{ fontWeight: 600, fontFamily: "'Fira Code', monospace", color: 'var(--neon-blue)' }}>{post.repo.name}</span>
-                    <span style={{ fontSize: '0.7rem', padding: '2px 8px', borderRadius: '20px', background: 'rgba(0,255,136,0.1)', color: 'var(--neon-green)', fontFamily: "'Fira Code', monospace" }}>
-                      {post.repo.lang}
-                    </span>
+                    <span style={{ fontWeight: 600, fontFamily: "'Fira Code', monospace", color: 'var(--neon-blue)' }}>{post.repoName}</span>
+                    {post.repoLang && (
+                      <span style={{ fontSize: '0.7rem', padding: '2px 8px', borderRadius: '20px', background: 'rgba(0,255,136,0.1)', color: 'var(--neon-green)', fontFamily: "'Fira Code', monospace" }}>
+                        {post.repoLang}
+                      </span>
+                    )}
                   </div>
                   <div style={{ display: 'flex', gap: '16px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Star size={12} style={{ color: 'var(--neon-green)' }} /> {post.repo.stars.toLocaleString()}</span>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><GitBranch size={12} style={{ color: 'var(--neon-blue)' }} /> {post.repo.forks}</span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Star size={12} style={{ color: 'var(--neon-green)' }} /> {post.repoStars?.toLocaleString() || 0}</span>
                   </div>
                 </div>
-                <p style={{ marginTop: '8px', fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>{post.repo.desc}</p>
-                <div style={{ marginTop: '10px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                  {post.repo.topics.map((t: string) => (
-                    <span key={t} className="mono" style={{ fontSize: '0.72rem', padding: '2px 8px', borderRadius: '6px', background: 'rgba(0,210,255,0.08)', color: 'var(--neon-blue)' }}>
-                      #{t}
-                    </span>
-                  ))}
-                </div>
+                <p style={{ marginTop: '8px', fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>{post.repoDesc || "No description provided."}</p>
               </div>
             )}
 
