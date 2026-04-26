@@ -75,8 +75,11 @@ export async function POST(req: Request) {
     })
 
     return NextResponse.json(newPost)
-  } catch (error) {
+  } catch (error: any) {
     console.error("Post Error:", error)
-    return NextResponse.json({ error: "Ошибка при создании поста" }, { status: 500 })
+    return NextResponse.json({ 
+      error: "Ошибка БД: " + (error.message || "Непредвиденная ошибка"),
+      details: error
+    }, { status: 500 })
   }
 }
