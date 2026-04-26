@@ -15,8 +15,11 @@ if (connectionString) {
   const adapter = new PrismaPg(pool)
   prismaInstance = new PrismaClient({ adapter })
 } else {
-  // Fallback for build time if DATABASE_URL is missing
-  prismaInstance = new PrismaClient()
+  // Fallback for build time - Prisma 7 requires a valid-looking URL or adapter even if not used
+  prismaInstance = new PrismaClient({
+    // @ts-ignore
+    datasourceUrl: "postgresql://dummy:dummy@localhost:5432/dummy"
+  })
 }
 
 export const prisma = globalForPrisma.prisma ?? prismaInstance
