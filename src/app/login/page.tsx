@@ -1,6 +1,8 @@
 "use client"
-import React from 'react';
-import { Code2, Network, Shield, User } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { signIn } from "next-auth/react";
+import { Shield, Lock, Cpu, Globe, User, Zap, Terminal as TerminalIcon, AlertCircle } from 'lucide-react';
 
 // Github SVG Component
 const GithubIcon = ({ size = 24, className = "" }) => (
@@ -9,93 +11,199 @@ const GithubIcon = ({ size = 24, className = "" }) => (
   </svg>
 );
 
-import { signIn } from "next-auth/react";
-
 export default function LoginPage() {
+  const [logs, setLogs] = useState<string[]>([]);
+  const [stage, setStage] = useState(0);
+
+  useEffect(() => {
+    const sequence = [
+      "Инициализация протоколов аутентификации...",
+      "Установка защищенного соединения с NEXUS_GRID...",
+      "Проверка целостности биометрических данных...",
+      "ОЖИДАНИЕ ВАЛИДАЦИИ ПОЛЬЗОВАТЕЛЯ..."
+    ];
+    
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i < sequence.length) {
+        setLogs(prev => [...prev, `[${new Date().toLocaleTimeString()}] ${sequence[i]}`]);
+        i++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 800);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="animate-fade-in" style={{ 
-      display: 'flex', flexDirection: 'column', alignItems: 'center', 
-      justifyContent: 'center', minHeight: 'calc(100vh - 200px)',
-      position: 'relative'
+    <div style={{ 
+      minHeight: '100vh', 
+      background: '#050505', 
+      color: '#fff', 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center',
+      overflow: 'hidden',
+      position: 'relative',
+      padding: '20px'
     }}>
+      {/* Background Ambience */}
       <div className="matrix-bg" />
-      
-      <div className="glass-panel" style={{ 
-        width: '100%', maxWidth: '900px', display: 'flex', 
-        overflow: 'hidden', padding: 0 
+      <div style={{ position: 'absolute', top: 0, left: '10%', width: '1px', height: '100%', background: 'var(--neon-purple)', opacity: 0.1 }} />
+      <div style={{ position: 'absolute', top: 0, right: '10%', width: '1px', height: '100%', background: 'var(--neon-blue)', opacity: 0.1 }} />
+
+      <div style={{ 
+        width: '100%', 
+        maxWidth: '1200px', 
+        display: 'grid', 
+        gridTemplateColumns: '1fr 1fr', 
+        gap: '40px',
+        zIndex: 1 
       }}>
         
-        {/* Left Side (Visual / Branding) */}
-        <div style={{ 
-          flex: '1', padding: '64px 48px', 
-          background: 'linear-gradient(135deg, rgba(181, 56, 255, 0.05), rgba(0, 210, 255, 0.05))',
-          borderRight: '1px solid var(--border-glass)'
-        }}>
-           <h1 style={{ fontSize: '3rem', lineHeight: '1.1', marginBottom: '24px' }}>
-             Join the <span className="text-neon-purple text-shadow">Matrix</span><br/>of Developers
-           </h1>
-           <p style={{ color: 'var(--text-secondary)', marginBottom: '48px', fontSize: '1.1rem', lineHeight: '1.6' }}>
-             NEXUS_CYBERNETIC — это социальная платформа нового поколения для IT-специалистов. Делитесь кодом, обсуждайте архитектуру и тестируйте AI модели в едином пространстве.
-           </p>
-
-           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                 <Code2 className="text-neon-green" size={24}/>
-                 <span>Обмен сниппетами и архитектурными идеями</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                 <Network className="text-neon-blue" size={24}/>
-                 <span>Поиск команды и нетворкинг</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                 <Shield className="text-neon-purple" size={24}/>
-                 <span>Безопасная авторизация</span>
-              </div>
-           </div>
-        </div>
-
-        {/* Right Side (Auth Form) */}
-        <div style={{ flex: '1', padding: '64px 48px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-          
-           <div style={{ 
-             width: '80px', height: '80px', borderRadius: '50%',
-             background: 'rgba(255, 255, 255, 0.05)',
-             display: 'flex', alignItems: 'center', justifyContent: 'center',
-             marginBottom: '32px'
-           }}>
-              <GithubIcon size={40} className="text-neon-green" />
+        {/* Left Side: System Diagnostics */}
+        <motion.div 
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="glass-panel" 
+          style={{ padding: '40px', borderLeft: '4px solid var(--neon-purple)', position: 'relative', overflow: 'hidden' }}
+        >
+           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px' }}>
+              <TerminalIcon className="text-neon-purple flicker" size={24} />
+              <h3 className="mono text-neon-purple" style={{ letterSpacing: '2px' }}>SYSTEM_LOGS</h3>
            </div>
 
-           <h2 style={{ marginBottom: '12px' }}>Инициализация сессии</h2>
-           <p style={{ color: 'var(--text-muted)', marginBottom: '40px' }}>
-             Используйте ваш GitHub аккаунт для мгновенного доступа к платформе.
+           <div style={{ height: '300px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {logs.map((log, idx) => (
+                <motion.p 
+                  key={idx}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="mono" 
+                  style={{ fontSize: '0.85rem', color: idx === logs.length - 1 ? 'var(--neon-green)' : 'var(--text-muted)' }}
+                >
+                  <span style={{ color: 'var(--neon-blue)' }}>&gt;</span> {log}
+                </motion.p>
+              ))}
+              {logs.length === 4 && (
+                <motion.div 
+                  animate={{ opacity: [0.5, 1, 0.5] }}
+                  transition={{ repeat: Infinity, duration: 1.5 }}
+                  style={{ width: '10px', height: '20px', background: 'var(--neon-green)', marginTop: '4px' }}
+                />
+              )}
+           </div>
+
+           <div style={{ marginTop: '40px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+              <div style={{ border: '1px solid rgba(255,255,255,0.05)', padding: '16px', borderRadius: '8px' }}>
+                 <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: '8px' }} className="mono">CORE_LOAD</div>
+                 <div style={{ height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', overflow: 'hidden' }}>
+                    <motion.div animate={{ width: '65%' }} style={{ height: '100%', background: 'var(--neon-blue)' }} />
+                 </div>
+              </div>
+              <div style={{ border: '1px solid rgba(255,255,255,0.05)', padding: '16px', borderRadius: '8px' }}>
+                 <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: '8px' }} className="mono">NETWORK_LATENCY</div>
+                 <div className="text-neon-green mono" style={{ fontSize: '1rem' }}>14ms</div>
+              </div>
+           </div>
+        </motion.div>
+
+        {/* Right Side: Identity Validation */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="glass-panel" 
+          style={{ 
+            padding: '40px', 
+            textAlign: 'center', 
+            background: 'radial-gradient(circle at top right, rgba(0, 210, 255, 0.05), transparent)',
+            display: 'flex', flexDirection: 'column', justifyContent: 'center'
+          }}
+        >
+           <div style={{ marginBottom: '40px', position: 'relative', display: 'inline-block', alignSelf: 'center' }}>
+              <motion.div 
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 20, ease: 'linear' }}
+                style={{ 
+                  width: '120px', height: '120px', borderRadius: '50%',
+                  border: '2px dashed var(--neon-blue)', opacity: 0.3,
+                  position: 'absolute', top: '-10px', left: '-10px'
+                }}
+              />
+              <div style={{ 
+                width: '100px', height: '100px', borderRadius: '50%',
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid var(--neon-blue)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: '0 0 20px rgba(0, 210, 255, 0.2)'
+              }}>
+                 <Shield size={50} className="text-neon-blue" />
+              </div>
+           </div>
+
+           <h1 style={{ fontSize: '2rem', marginBottom: '12px' }} className="text-shadow">IDENTITY_VALIDATION</h1>
+           <p style={{ color: 'var(--text-muted)', marginBottom: '48px', maxWidth: '300px', margin: '0 auto 48px' }}>
+             Пожалуйста, подтвердите свою личность через один из доступных протоколов доступа.
            </p>
 
-           <button 
-              className="neon-button success animate-pulse-glow" 
-              style={{ padding: '16px 32px', fontSize: '1.1rem', width: '100%', marginBottom: '16px' }}
-              onClick={() => signIn('github', { callbackUrl: '/' })}
-            >
-              <GithubIcon size={20} />
-              Connect with GitHub
-           </button>
+           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <button 
+                onClick={() => signIn('github', { callbackUrl: '/' })}
+                className="neon-button success" 
+                style={{ height: '60px', padding: '0 32px', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px' }}
+              >
+                <GithubIcon size={24} /> 
+                <span className="mono" style={{ fontWeight: 600 }}>CONNECT_GITHUB</span>
+              </button>
 
-           <button 
-              className="neon-button" 
-              style={{ padding: '12px 32px', fontSize: '1rem', width: '100%', borderColor: 'var(--neon-blue)', color: 'var(--neon-blue)' }}
-              onClick={() => signIn('credentials', { callbackUrl: '/' })}
-            >
-              <User size={18} />
-              GUEST_ACCESS (Limited)
-           </button>
-           
-           <p style={{ marginTop: '24px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-             Продолжая, вы соглашаетесь с условиями использования Системы.
-           </p>
-        </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '20px', color: 'var(--text-muted)' }}>
+                 <div style={{ flex: 1, height: '1px', background: 'var(--border-glass)' }} />
+                 <span className="mono" style={{ fontSize: '0.8rem' }}>OR</span>
+                 <div style={{ flex: 1, height: '1px', background: 'var(--border-glass)' }} />
+              </div>
+
+              <button 
+                onClick={() => signIn('credentials', { callbackUrl: '/' })}
+                className="neon-button" 
+                style={{ 
+                  height: '50px', borderColor: 'var(--neon-purple)', color: 'var(--neon-purple)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' 
+                }}
+              >
+                <User size={18} /> 
+                <span className="mono">BYPASS_GUEST</span>
+              </button>
+           </div>
+
+           <div style={{ marginTop: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', color: 'var(--text-muted)' }}>
+              <Lock size={14} />
+              <span style={{ fontSize: '0.75rem' }} className="mono">END-TO-END ENCRYPTED SESSION</span>
+           </div>
+        </motion.div>
 
       </div>
 
+      {/* Extreme Visuals */}
+      <div style={{ 
+        position: 'absolute', bottom: '20px', left: '20px', 
+        fontSize: '0.7rem', color: 'var(--text-muted)', maxWidth: '200px'
+      }} className="mono flicker">
+        WARNING: UNSTABLE NETWORK DETECTED. PROCEEDING WITH MULTI-LAYER AUTHENTICATION.
+      </div>
+      <div style={{ 
+        position: 'absolute', top: '20px', right: '20px', 
+        display: 'flex', gap: '10px'
+      }}>
+         {[1,2,3].map(i => (
+           <div key={i} style={{ width: '40px', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px' }}>
+              <motion.div 
+                animate={{ width: ['0%', '100%', '0%'] }}
+                transition={{ duration: 2 + i, repeat: Infinity }}
+                style={{ height: '100%', background: 'var(--neon-green)' }}
+              />
+           </div>
+         ))}
+      </div>
     </div>
   );
 }
