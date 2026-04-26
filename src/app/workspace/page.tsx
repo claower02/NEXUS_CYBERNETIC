@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { useSession, signOut } from "next-auth/react"
 import { User, GitBranch, Star, Code2, Settings, Bell, Shield, LogOut, Edit3, Check, Zap } from "lucide-react"
 
@@ -19,11 +19,22 @@ const ACTIVITY = [
 ]
 
 const SKILLS = ["Rust", "TypeScript", "Next.js", "PostgreSQL", "Docker", "Linux", "System Design", "API Design"]
-const REPOS = [
-  { name: "nexus-parser", desc: "High-performance log parser in Rust", stars: 48, lang: "Rust", color: "#dea584" },
-  { name: "glow-components", desc: "Glassmorphism UI kit for React", stars: 127, lang: "TypeScript", color: "#3178c6" },
-  { name: "infra-scripts", desc: "Personal infrastructure automation", stars: 12, lang: "Shell", color: "#89e051" },
-]
+const getLanguageColor = (lang: string) => {
+  const colors: Record<string, string> = {
+    JavaScript: "#f1e05a",
+    TypeScript: "#3178c6",
+    Python: "#3572A5",
+    Rust: "#dea584",
+    HTML: "#e34c26",
+    CSS: "#563d7c",
+    Shell: "#89e051",
+    Go: "#00ADD8",
+    Java: "#b07219",
+    "C++": "#f34b7d",
+    C: "#555555",
+  };
+  return colors[lang] || "#888888";
+}
 
 const TABS = ["Профиль", "Активность", "Репозитории", "Настройки"]
 
@@ -34,9 +45,25 @@ export default function WorkspacePage() {
   const [bio, setBio] = useState("Systems developer. Rust & TypeScript. Open-source contributor. Building performant software.")
   const [savedBio, setSavedBio] = useState(bio)
   const [notifications, setNotifications] = useState({ posts: true, mentions: true, messages: true })
+  const [repos, setRepos] = useState<any[]>([])
+  const [loadingRepos, setLoadingRepos] = useState(false)
 
   const handle = session?.user?.name?.toLowerCase().replace(/\s+/g, '_') || "guest_node"
   const isGuest = session?.user?.email === "guest@nexus.cyber"
+
+  useEffect(() => {
+    const login = (session?.user as any)?.login;
+    if (!isGuest && login) {
+      setLoadingRepos(true)
+      fetch(`https://api.github.com/users/${login}/repos?sort=updated&per_page=6`)
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) setRepos(data)
+          setLoadingRepos(false)
+        })
+        .catch(() => setLoadingRepos(false))
+    }
+  }, [isGuest, session])
 
   return (
     <div className="animate-fade-in" style={{ display: 'flex', gap: '28px', alignItems: 'flex-start' }}>
@@ -97,7 +124,7 @@ export default function WorkspacePage() {
             {[
               { label: "Постов", value: isGuest ? "—" : "12" },
               { label: "Связей", value: isGuest ? "—" : "47" },
-              { label: "Репо", value: isGuest ? "—" : REPOS.length.toString() },
+              { label: "Репо", value: isGuest ? "—" : repos.length.toString() },
               { label: "Звёзд", value: isGuest ? "—" : "187" },
             ].map(stat => (
               <div key={stat.label} style={{ padding: '10px', borderRadius: '10px', background: 'rgba(255,255,255,0.03)' }}>
@@ -251,26 +278,38 @@ export default function WorkspacePage() {
                 <Code2 size={32} style={{ marginBottom: '12px', opacity: 0.3 }} />
                 <p className="mono" style={{ color: 'var(--text-muted)' }}>Войдите через GitHub для просмотра репозиториев</p>
               </div>
-            ) : REPOS.map(repo => (
+            ) : loadingRepos ? (
+              <div style={{ textAlign: 'center', padding: '40px' }}>
+                <div className="spinner" style={{ borderTopColor: 'var(--neon-blue)', width: '30px', height: '30px', margin: '0 auto 16px', borderRadius: '50%', border: '2px solid rgba(0,210,255,0.2)', borderTop: '2px solid var(--neon-blue)', animation: 'spin 1s linear infinite' }} />
+                <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+                <p className="mono" style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Синхронизация с GitHub GRID...</p>
+              </div>
+            ) : repos.length === 0 ? (
+              <div className="glass-panel" style={{ padding: '40px', textAlign: 'center' }}>
+                <p className="mono" style={{ color: 'var(--text-muted)' }}>Публичные репозитории не найдены.</p>
+              </div>
+            ) : repos.map((repo: any) => {
+              const langColor = getLanguageColor(repo.language || "Unknown");
+              return (
               <div key={repo.name} className="hologram-card" style={{ padding: '22px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
                       <GithubIcon size={16} />
                       <span style={{ fontWeight: 600, color: 'var(--neon-blue)', fontFamily: "'Fira Code', monospace" }}>{repo.name}</span>
-                      <span style={{ fontSize: '0.7rem', padding: '2px 8px', borderRadius: '6px', background: `${repo.color}15`, color: repo.color, fontFamily: "'Fira Code', monospace" }}>
-                        {repo.lang}
+                      <span style={{ fontSize: '0.7rem', padding: '2px 8px', borderRadius: '6px', background: `${langColor}15`, color: langColor, fontFamily: "'Fira Code', monospace" }}>
+                        {repo.language || "Unknown"}
                       </span>
                     </div>
-                    <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{repo.desc}</p>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '8px' }}>{repo.description || "No description provided."}</p>
                   </div>
                   <div style={{ display: 'flex', gap: '12px', color: 'var(--text-muted)', fontSize: '0.82rem', fontFamily: "'Fira Code', monospace" }}>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Star size={12} style={{ color: 'var(--neon-green)' }} /> {repo.stars}</span>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><GitBranch size={12} /> fork</span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Star size={12} style={{ color: 'var(--neon-green)' }} /> {repo.stargazers_count}</span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><GitBranch size={12} /> {repo.forks_count}</span>
                   </div>
                 </div>
               </div>
-            ))}
+            ); }) }
           </div>
         )}
 

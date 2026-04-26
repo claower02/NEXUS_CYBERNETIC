@@ -41,9 +41,13 @@ const handler = NextAuth({
     error: '/login', // Redirect errors back to login instead of generic error page
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, profile }) {
       if (user) {
         token.id = user.id;
+      }
+      // Explicitly cast profile to any to access login safely, or check if login exists
+      if (profile && 'login' in profile) {
+        token.login = profile.login;
       }
       return token;
     },
@@ -51,6 +55,8 @@ const handler = NextAuth({
       if (session.user) {
         // @ts-ignore
         session.user.id = token.id;
+        // @ts-ignore
+        session.user.login = token.login;
       }
       return session;
     }
