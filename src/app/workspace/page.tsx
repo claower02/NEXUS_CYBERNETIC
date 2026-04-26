@@ -272,7 +272,7 @@ export default function WorkspacePage() {
               <Zap size={16} className="text-neon-blue" /> Последняя активность
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              {(!isGuest && Array.isArray(ACTIVITY)) ? ACTIVITY.map((a, i) => (
+              {!isGuest && Array.isArray(ACTIVITY) && ACTIVITY.map((a, i) => (
                 <div key={i} style={{ display: 'flex', gap: '16px', paddingBottom: '16px', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                   <div style={{ width: '32px', height: '32px', borderRadius: '10px', flexShrink: 0, background: `${a.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: `inset 0 0 0 1px ${a.color}30` }}>
                     <Zap size={14} style={{ color: a.color }} />
