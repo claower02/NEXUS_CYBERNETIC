@@ -4,25 +4,30 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 const handler = NextAuth({
   providers: [
-    GithubProvider({
-      clientId: process.env.GITHUB_ID as string,
-      clientSecret: process.env.GITHUB_SECRET as string,
-    }),
     CredentialsProvider({
+      id: "credentials",
       name: "Guest",
       credentials: {},
       async authorize() {
-        // Return a mock user object for guest access
         return {
-          id: "guest_" + Math.random().toString(36).substr(2, 9),
+          id: "guest_" + Math.random().toString(36).substring(2, 9),
           name: "Guest Node",
           email: "guest@nexus.cyber",
           image: null,
         }
       }
-    })
+    }),
+    ...(process.env.GITHUB_ID ? [
+      GithubProvider({
+        clientId: process.env.GITHUB_ID as string,
+        clientSecret: process.env.GITHUB_SECRET as string,
+      })
+    ] : []),
   ],
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || "nexus_cybernetic_default_secret_2025_secure",
+  session: {
+    strategy: "jwt",
+  },
   pages: {
     signIn: '/login',
   },
