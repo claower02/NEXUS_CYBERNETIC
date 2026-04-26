@@ -165,7 +165,7 @@ export default function WorkspacePage() {
 
         {!isGuest && (
           <button 
-            onClick={() => signIn('google')} 
+            onClick={() => signIn('google', { callbackUrl: '/workspace' })} 
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
               padding: '12px', borderRadius: '12px', border: 'none', cursor: 'pointer',
