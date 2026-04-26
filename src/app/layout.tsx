@@ -16,60 +16,7 @@ export const metadata: Metadata = {
   description: "IT Social Network with Neon Cyberpunk Vibes",
 };
 
-function Navbar() {
-  return (
-    <nav className="glass-panel" style={{ 
-      position: 'fixed', 
-      top: '16px', 
-      left: '50%', 
-      transform: 'translateX(-50%)',
-      width: 'calc(100% - 32px)',
-      maxWidth: '1200px',
-      padding: '12px 24px',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      zIndex: 100
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <Terminal className="text-neon-green" size={28} />
-          <span style={{ fontSize: '1.2rem', fontWeight: 700, letterSpacing: '2px' }} className="mono text-neon-green">
-            NEXUS_CYBERNETIC
-          </span>
-        </Link>
-        <div style={{ display: 'flex', gap: '24px', opacity: 0.8 }} className="mono">
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Cpu size={18} /> Лента
-          </Link>
-          <Link href="/intel" style={{ display: 'flex', alignItems: 'center', gap: '8px' }} className="text-neon-green">
-            <Zap size={18} /> Intel
-          </Link>
-          <Link href="/nodes" style={{ display: 'flex', alignItems: 'center', gap: '8px' }} className="text-neon-blue">
-            <Users size={18} /> Nodes
-          </Link>
-          <Link href="/comms" style={{ display: 'flex', alignItems: 'center', gap: '8px' }} className="text-neon-purple">
-            <MessageSquare size={18} /> Comms
-          </Link>
-          <Link href="/ai-hub" style={{ display: 'flex', alignItems: 'center', gap: '8px' }} className="text-neon-purple">
-            <Bot size={18} /> Нейронки
-          </Link>
-          <Link href="/workspace" style={{ display: 'flex', alignItems: 'center', gap: '8px' }} className="text-neon-blue">
-            <User size={18} /> Workspace
-          </Link>
-        </div>
-      </div>
-      
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <Link href="/login" className="neon-button primary">
-          <GithubIcon size={18} />
-          Войти
-        </Link>
-      </div>
-    </nav>
-  );
-}
-
+import { Navbar } from "@/components/Navbar";
 import { Providers } from "@/components/Providers";
 
 export default function RootLayout({
