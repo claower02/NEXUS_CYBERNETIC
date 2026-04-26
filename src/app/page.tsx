@@ -38,6 +38,7 @@ export default function Home() {
   const [savedPosts, setSavedPosts] = useState<Set<number>>(new Set([3]))
   const [activeFilter, setActiveFilter] = useState("new")
   const [loadingPosts, setLoadingPosts] = useState(true)
+  const [isPublishing, setIsPublishing] = useState(false)
 
   const [userRepos, setUserRepos] = useState<any[]>([])
   const [selectedRepo, setSelectedRepo] = useState<any>(null)
@@ -80,7 +81,8 @@ export default function Home() {
   }
 
   const handlePublish = async () => {
-    if (!postText.trim()) return
+    if (!postText.trim() || isPublishing) return
+    setIsPublishing(true)
     
     try {
       const res = await fetch("/api/posts", {
@@ -97,13 +99,18 @@ export default function Home() {
         })
       })
 
+      const data = await res.json()
+
       if (res.ok) {
-        const newPost = await res.json()
-        setLocalPosts([newPost, ...localPosts])
+        setLocalPosts([data, ...localPosts])
         setPostText(""); setCodeText(""); setShowCode(false); setShowRepo(false); setSelectedRepo(null)
+      } else {
+        alert("Ошибка сервера: " + (data.error || "Неизвестная ошибка"))
       }
     } catch (error) {
-      alert("Ошибка при публикации")
+      alert("Ошибка сети: не удалось связаться с сервером")
+    } finally {
+      setIsPublishing(false)
     }
   }
 
@@ -198,11 +205,16 @@ export default function Home() {
                   </button>
                 </div>
                 <button
-                  className="neon-button primary"
                   onClick={handlePublish}
-                  disabled={!postText.trim()}
-                  style={{ padding: '8px 20px', opacity: postText.trim() ? 1 : 0.4 }}>
-                  Опубликовать
+                  disabled={!postText.trim() || isPublishing}
+                  className="neon-button primary"
+                  style={{ 
+                    padding: '10px 24px', 
+                    fontSize: '0.9rem',
+                    opacity: (!postText.trim() || isPublishing) ? 0.5 : 1
+                  }}
+                >
+                  {isPublishing ? "ПУБЛИКАЦИЯ..." : "ОПУБЛИКОВАТЬ"}
                 </button>
               </div>
             </div>
