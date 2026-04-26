@@ -9,27 +9,46 @@ const globalForPrisma = globalThis as unknown as {
 function createPrismaClient(): PrismaClient {
   const connectionString = process.env.DATABASE_URL
   
-  // Если мы в браузере или нет строки подключения, возвращаем пустышку
-  // Это предотвратит краш Client Components
-  if (typeof window !== "undefined" || !connectionString) {
-    return new Proxy({} as PrismaClient, {
-      get() {
-        throw new Error("PrismaClient cannot be used on the client side or without DATABASE_URL.")
-      }
-    })
+  // Безопасный прокси-заглушка для пограничных случаев
+  const dummyClient = new Proxy({} as PrismaClient, {
+    get(_target, prop) {
+      console.warn(`Prisma access attempted on property "${String(prop)}", but DATABASE_URL is missing.`)
+      // Возвращаем функцию-пустышку для методов БД (.findMany, .create и т.д.)
+      return () => Promise.resolve(null)
+    }
+  })
+
+  // Если мы в браузере — возвращаем заглушку (база только на сервере!)
+  if (typeof window !== "undefined") {
+    return dummyClient
+  }
+
+  // Если на сервере нет адреса базы — не крашим приложение, а возвращаем заглушку
+  if (!connectionString) {
+    console.error("CRITICAL: DATABASE_URL is missing in environment variables!")
+    return dummyClient
   }
 
   try {
-    const pool = new pg.Pool({ connectionString, max: 10 })
+    const pool = new pg.Pool({ 
+      connectionString, 
+      max: 10,
+      connectionTimeoutMillis: 5000 
+    })
+    
+    // Предотвращаем падение процесса при ошибках в пуле
+    pool.on('error', (err) => {
+      console.error('Unexpected error on idle client', err)
+    })
+
     const adapter = new PrismaPg(pool)
     return new PrismaClient({ adapter })
   } catch (error) {
-    console.error("Failed to initialize Prisma:", error)
-    return new PrismaClient() // Fallback
+    console.error("Prisma initialization failed:", error)
+    return dummyClient
   }
 }
 
-// Singleton для работы в Next.js (предотвращает утечки соединений при hot-reload)
 export const prisma = globalForPrisma.prisma ?? createPrismaClient()
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma
