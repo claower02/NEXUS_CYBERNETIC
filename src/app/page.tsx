@@ -228,9 +228,10 @@ export default function Home() {
 
       {/* Right Sidebar (Trends/Stats) */}
       <div style={{ width: '300px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
-         <div className="glass-panel" style={{ padding: '24px' }}>
-            <h4 className="mono text-neon-green" style={{ marginBottom: '16px' }}>&gt; Популярные теги</h4>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+         <div className="glass-panel" style={{ padding: '24px', position: 'relative', overflow: 'hidden' }}>
+            <div className="circuit-overlay" />
+            <h4 className="mono text-neon-green" style={{ marginBottom: '16px', position: 'relative' }}>&gt; Популярные теги</h4>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', position: 'relative' }}>
               {['#rust', '#nextjs', '#ai_agents', '#kubernetes', '#websockets'].map(tag => (
                 <span key={tag} style={{ 
                   padding: '4px 8px', borderRadius: '4px', 
@@ -244,11 +245,12 @@ export default function Home() {
          </div>
 
          {/* Intel Feed Widget */}
-         <div className="glass-panel" style={{ padding: '24px' }}>
-            <h4 className="mono text-neon-blue" style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+         <div className="glass-panel" style={{ padding: '24px', position: 'relative', overflow: 'hidden' }}>
+            <div className="circuit-overlay" />
+            <h4 className="mono text-neon-blue" style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px', position: 'relative' }}>
               <Zap size={16} /> LATEST_INTEL
             </h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', position: 'relative' }}>
                <div style={{ fontSize: '0.85rem', borderLeft: '2px solid var(--neon-green)', paddingLeft: '12px' }}>
                   <div style={{ color: 'var(--text-muted)', fontSize: '0.7rem' }} className="mono">AI_MODELS | 12m ago</div>
                   <div style={{ marginTop: '4px' }}>DeepSeek-V3 побил рекорды эффективности.</div>

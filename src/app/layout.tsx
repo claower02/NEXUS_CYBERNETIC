@@ -28,6 +28,8 @@ export default function RootLayout({
     <html lang="ru">
       <body>
         <Providers>
+          <div className="cyber-grid" />
+          <div className="noise-bg" />
           <Navbar />
           <main style={{ paddingTop: '100px', paddingBottom: '40px' }} className="container">
             {children}

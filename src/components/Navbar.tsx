@@ -39,22 +39,22 @@ export function Navbar() {
           </span>
         </Link>
         <div style={{ display: 'flex', gap: '24px', opacity: 0.8 }} className="mono">
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px' }} className="glitch-hover">
             <Cpu size={18} /> Лента
           </Link>
-          <Link href="/intel" style={{ display: 'flex', alignItems: 'center', gap: '8px' }} className="text-neon-green">
+          <Link href="/intel" style={{ display: 'flex', alignItems: 'center', gap: '8px' }} className="text-neon-green glitch-hover">
             <Zap size={18} /> Intel
           </Link>
-          <Link href="/nodes" style={{ display: 'flex', alignItems: 'center', gap: '8px' }} className="text-neon-blue">
+          <Link href="/nodes" style={{ display: 'flex', alignItems: 'center', gap: '8px' }} className="text-neon-blue glitch-hover">
             <Users size={18} /> Nodes
           </Link>
-          <Link href="/comms" style={{ display: 'flex', alignItems: 'center', gap: '8px' }} className="text-neon-purple">
+          <Link href="/comms" style={{ display: 'flex', alignItems: 'center', gap: '8px' }} className="text-neon-purple glitch-hover">
             <MessageSquare size={18} /> Comms
           </Link>
-          <Link href="/ai-hub" style={{ display: 'flex', alignItems: 'center', gap: '8px' }} className="text-neon-purple">
+          <Link href="/ai-hub" style={{ display: 'flex', alignItems: 'center', gap: '8px' }} className="text-neon-purple glitch-hover">
             <Bot size={18} /> Нейронки
           </Link>
-          <Link href="/workspace" style={{ display: 'flex', alignItems: 'center', gap: '8px' }} className="text-neon-blue">
+          <Link href="/workspace" style={{ display: 'flex', alignItems: 'center', gap: '8px' }} className="text-neon-blue glitch-hover">
             <User size={18} /> Workspace
           </Link>
         </div>
