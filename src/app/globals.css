@@ -1,25 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
 
+/* Advanced Cyber UI System */
 :root {
-  --bg-primary: #050505;
-  --bg-secondary: #0a0a0a;
-  --bg-glass: rgba(15, 15, 20, 0.45);
-  --border-glass: rgba(255, 255, 255, 0.08);
-  
   --neon-green: #00ff88;
-  --neon-green-glow: rgba(0, 255, 136, 0.5);
-  
-  --neon-purple: #b538ff;
-  --neon-purple-glow: rgba(181, 56, 255, 0.5);
-  
   --neon-blue: #00d2ff;
-  --neon-blue-glow: rgba(0, 210, 255, 0.5);
-
-  --text-primary: #ffffff;
-  --text-secondary: #a0a0a0;
-  --text-muted: #555555;
-
-  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --neon-purple: #b538ff;
+  --neon-red: #ff3860;
+  --dark-bg: #050505;
+  --card-bg: rgba(20, 20, 30, 0.4);
+  --border-glass: rgba(255, 255, 255, 0.08);
   --transition-medium: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 

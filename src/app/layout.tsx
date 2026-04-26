@@ -18,6 +18,7 @@ export const metadata: Metadata = {
 
 import { Navbar } from "@/components/Navbar";
 import { Providers } from "@/components/Providers";
+import { CustomCursor } from "@/components/CustomCursor";
 
 export default function RootLayout({
   children,
@@ -26,9 +27,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
-      <body>
+      <body className="cyber-grid-animated">
         <Providers>
-          <div className="cyber-grid" />
+          <CustomCursor />
           <div className="noise-bg" />
           <Navbar />
           <main style={{ paddingTop: '100px', paddingBottom: '40px' }} className="container">

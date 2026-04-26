@@ -135,7 +135,8 @@ export default function Home() {
 
         {/* Posts */}
         {mockPosts.map(post => (
-          <div key={post.id} className="glass-panel" style={{ padding: '24px' }}>
+          <div key={post.id} className="hologram-card" style={{ padding: '24px' }}>
+            <div className="scan-ray" />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                <div style={{ display: 'flex', gap: '16px' }}>
                   <div style={{ 
@@ -147,7 +148,7 @@ export default function Home() {
                     <User size={24} className="text-neon-purple" />
                   </div>
                   <div>
-                    <h3 style={{ margin: 0, fontSize: '1.1rem' }} className="text-neon-blue">{post.author}</h3>
+                    <h3 style={{ margin: 0, fontSize: '1.1rem' }} className="text-neon-blue text-glitch">{post.author}</h3>
                     <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }} className="mono">{post.role}</span>
                   </div>
                </div>
