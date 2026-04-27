@@ -268,16 +268,16 @@ export default function Home() {
 
             {/* Author */}
             <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start', marginBottom: '18px' }}>
-              <img src={post.author?.image || `https://api.dicebear.com/7.x/avataaars/svg?seed=${post.id}`} alt={post.author?.name} style={{ width: '46px', height: '46px', borderRadius: '12px', border: '2px solid rgba(0,210,255,0.2)', flexShrink: 0 }} />
+              <img src={post.author?.image || `https://api.dicebear.com/7.x/avataaars/svg?seed=${post.id}`} alt={post.author?.name || 'User'} style={{ width: '46px', height: '46px', borderRadius: '12px', border: '2px solid rgba(0,210,255,0.2)', flexShrink: 0 }} />
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div>
-                    <span style={{ fontWeight: 600, fontSize: '0.95rem' }}>{post.author?.name}</span>
-                    <span className="mono" style={{ color: 'var(--neon-blue)', fontSize: '0.8rem', marginLeft: '8px' }}>@{post.author?.name?.toLowerCase().replace(/\s+/g, '_')}</span>
+                    <span style={{ fontWeight: 600, fontSize: '0.95rem' }}>{post.author?.name || 'Anonymous Developer'}</span>
+                    <span className="mono" style={{ color: 'var(--neon-blue)', fontSize: '0.8rem', marginLeft: '8px' }}>@{post.author?.name?.toLowerCase().replace(/\s+/g, '_') || 'guest'}</span>
                     <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '2px', fontFamily: "'Fira Code', monospace" }}>NEXUS Member</div>
                   </div>
                   <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: "'Fira Code', monospace", whiteSpace: 'nowrap' }}>
-                    {new Date(post.createdAt).toLocaleDateString()}
+                    {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : 'RECENT_NODE'}
                   </span>
                 </div>
               </div>
@@ -324,7 +324,7 @@ export default function Home() {
             )}
 
             {/* Tags */}
-            {post.tags.length > 0 && (
+            {Array.isArray(post.tags) && post.tags.length > 0 && (
               <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '18px' }}>
                 {post.tags.map((tag: string) => (
                   <span key={tag} className="mono" style={{ fontSize: '0.8rem', color: 'var(--neon-blue)', opacity: 0.7 }}>{tag}</span>
@@ -342,7 +342,7 @@ export default function Home() {
                 cursor: 'pointer', fontSize: '0.85rem', transition: 'all 0.2s',
               }}>
                 <Heart size={15} fill={likedPosts.has(post.id) ? 'currentColor' : 'none'} />
-                {post.likes + (likedPosts.has(post.id) && !post.liked ? 1 : 0)}
+                {Number(post.likes || 0) + (likedPosts.has(post.id) && !post.liked ? 1 : 0)}
               </button>
 
               <button style={{
@@ -351,7 +351,7 @@ export default function Home() {
                 background: 'rgba(255,255,255,0.04)', color: 'var(--text-secondary)',
                 cursor: 'pointer', fontSize: '0.85rem', transition: 'all 0.2s',
               }}>
-                <MessageSquare size={15} /> {post.comments}
+                <MessageSquare size={15} /> {post.comments || 0}
               </button>
 
               <button onClick={() => handleSave(post.id)} style={{
